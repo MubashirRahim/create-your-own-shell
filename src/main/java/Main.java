@@ -16,7 +16,11 @@ public class Main {
             if ("exit".equals(command)) {
                 System.exit(0);
             }
-            System.out.println(command + ": command not found");
+            if (command.startsWith("echo")) {
+                System.out.println(command.replace("echo", "").trim());
+            } else {
+                System.out.println(command + ": command not found");
+            }
         }
     }
 }
