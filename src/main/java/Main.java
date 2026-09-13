@@ -18,7 +18,7 @@ public class Main {
                 System.exit(0);
             }
             if (command.startsWith("type")) {
-                command = command.replaceFirst("type", "");
+                command = command.replaceFirst("type", "").trim();
             }
             if (command.startsWith("echo")) {
                 System.out.println(command.replace("echo", "").trim());
