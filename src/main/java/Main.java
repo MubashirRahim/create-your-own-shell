@@ -1,9 +1,10 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         // TODO: Uncomment the code below to pass the first stage
-        //System.out.print("$ ");
+        // System.out.print("$ ");
 
         Scanner scanner = new Scanner(System.in);
 
@@ -12,6 +13,9 @@ public class Main {
 
             String command = scanner.nextLine();
 
+            if ("exit".equals(command)) {
+                System.exit(0);
+            }
             System.out.println(command + ": command not found");
         }
     }
