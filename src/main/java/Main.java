@@ -1,4 +1,5 @@
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
@@ -16,11 +17,18 @@ public class Main {
             if ("exit".equals(command)) {
                 System.exit(0);
             }
+            if (command.startsWith("type")) {
+                command = command.replaceFirst("type", "");
+            }
             if (command.startsWith("echo")) {
                 System.out.println(command.replace("echo", "").trim());
+            } else if (command.endsWith("echo") || command.endsWith("exit") || command.endsWith("type")) {
+                System.out.println(command.trim() + " is a shell builtin");
+
             } else {
                 System.out.println(command + ": command not found");
             }
         }
+
     }
 }
