@@ -17,17 +17,24 @@ public class Main {
             if ("exit".equals(command)) {
                 System.exit(0);
             }
-            if (command.startsWith("type")) {
-                command = command.replaceFirst("type", "").trim();
-            }
             if (command.startsWith("echo")) {
                 System.out.println(command.replace("echo", "").trim());
-            } else if (command.endsWith("echo") || command.endsWith("exit") || command.endsWith("type")) {
-                System.out.println(command.trim() + " is a shell builtin");
+            } else if (command.startsWith("type")) {
+                command = command.replaceFirst("type", "");
+                if (command.endsWith("echo") || command.endsWith("exit") || command.endsWith("type")) {
+                    System.out.println(command.trim() + " is a shell builtin");
+                }else{
+                    System.out.println(command.trim() + ": not found");
+                }
             } else {
-                System.out.println(command + ": not found");
+                System.out.println(command + ": command not found");
             }
         }
+    }
 
+    public void commandDirectory(String command) {
+        Map<String, String> commandMap = new HashMap<>();
+
+        commandMap.put("echo", "Prints the input string to the console.");
     }
 }
