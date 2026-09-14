@@ -10,38 +10,45 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        while (true) {
-            System.out.print("$ ");
+        try {
 
-            String input = scanner.nextLine();
+            while (true) {
+                System.out.print("$ ");
 
-            if ("exit".equals(input)) {
-                break;
-            }
+                String input = scanner.nextLine();
 
-            if (input.startsWith("echo ")) {
-                String message = input.substring(5);
-                System.out.println(message);
-
-            } else if (input.startsWith("type ")) {
-                String command = input.substring(5).trim();
-
-                if (isBuiltin(command)) {
-                    System.out.println(command + " is a shell builtin");
-
-                } else {
-                    String result = searchForFile(command);
-
-                    if (result != null) {
-                        System.out.println(command + " is " + result);
-                    } else {
-                        System.out.println(command + ": not found");
-                    }
+                if ("exit".equals(input)) {
+                    break;
                 }
 
-            } else {
-                System.out.println(input + ": command not found");
+                if (input.startsWith("echo ")) {
+                    String message = input.substring(5);
+                    System.out.println(message);
+
+                } else if (input.startsWith("type ")) {
+                    String command = input.substring(5).trim();
+
+                    if (isBuiltin(command)) {
+                        System.out.println(command + " is a shell builtin");
+
+                    } else {
+                        String result = searchForFile(command);
+
+                        if (result != null) {
+                            System.out.println(command + " is " + result);
+                        } else {
+                            System.out.println(command + ": not found");
+                        }
+                    }
+
+                } else {
+                    executeCommand(input);
+                }
             }
+        } catch (Exception e) {
+            System.out.println("An error occurred: " + e.getMessage());
+        } finally {
+            scanner.close();
         }
     }
 
@@ -69,5 +76,31 @@ public class Main {
         }
 
         return null;
+    }
+
+    private static void executeCommand(String input) throws Exception {
+        String[] parts = input.split(" ");
+
+        String command = parts[0];
+
+        String executable = searchForFile(command);
+
+        if (executable == null) {
+            System.out.println(command + ": command not found");
+            return;
+        }
+
+        ProcessBuilder processBuilder = new ProcessBuilder(parts);
+        processBuilder.redirectErrorStream(true);
+
+        Process process = processBuilder.start();
+
+        Scanner output = new Scanner(process.getInputStream());
+
+        while (output.hasNextLine()) {
+            System.out.println(output.nextLine());
+        }
+
+        process.waitFor();
     }
 }
