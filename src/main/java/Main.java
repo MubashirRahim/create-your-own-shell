@@ -55,7 +55,7 @@ public class Main {
     }
 
     private static boolean isBuiltin(String command) {
-        return command.equals("echo") || command.equals("exit") || command.equals("type");
+        return command.equals("echo") || command.equals("exit") || command.equals("type") || command.equals("pwd");
     }
 
     public static String searchForFile(String command) {
