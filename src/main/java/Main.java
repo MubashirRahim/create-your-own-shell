@@ -41,6 +41,8 @@ public class Main {
                         }
                     }
 
+                } else if ("pwd".equals(input)) {
+                    System.out.println(System.getProperty("user.dir"));
                 } else {
                     executeCommand(input);
                 }
@@ -53,9 +55,7 @@ public class Main {
     }
 
     private static boolean isBuiltin(String command) {
-        return command.equals("echo")
-                || command.equals("exit")
-                || command.equals("type");
+        return command.equals("echo") || command.equals("exit") || command.equals("type");
     }
 
     public static String searchForFile(String command) {
