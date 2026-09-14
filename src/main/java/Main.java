@@ -1,40 +1,73 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        // TODO: Uncomment the code below to pass the first stage
-        // System.out.print("$ ");
+
+    public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
             System.out.print("$ ");
 
-            String command = scanner.nextLine();
+            String input = scanner.nextLine();
 
-            if ("exit".equals(command)) {
-                System.exit(0);
+            if ("exit".equals(input)) {
+                break;
             }
-            if (command.startsWith("echo")) {
-                System.out.println(command.replace("echo", "").trim());
-            } else if (command.startsWith("type")) {
-                command = command.replaceFirst("type", "");
-                if (command.endsWith("echo") || command.endsWith("exit") || command.endsWith("type")) {
-                    System.out.println(command.trim() + " is a shell builtin");
-                }else{
-                    System.out.println(command.trim() + ": not found");
+
+            if (input.startsWith("echo ")) {
+                String message = input.substring(5);
+                System.out.println(message);
+
+            } else if (input.startsWith("type ")) {
+                String command = input.substring(5).trim();
+
+                if (isBuiltin(command)) {
+                    System.out.println(command + " is a shell builtin");
+
+                } else {
+                    String result = searchForFile(command);
+
+                    if (result != null) {
+                        System.out.println(command + " is " + result);
+                    } else {
+                        System.out.println(command + ": not found");
+                    }
                 }
+
             } else {
-                System.out.println(command + ": command not found");
+                System.out.println(input + ": command not found");
             }
         }
     }
 
-    public void commandDirectory(String command) {
-        Map<String, String> commandMap = new HashMap<>();
+    private static boolean isBuiltin(String command) {
+        return command.equals("echo")
+                || command.equals("exit")
+                || command.equals("type");
+    }
 
-        commandMap.put("echo", "Prints the input string to the console.");
+    public static String searchForFile(String command) {
+
+        String pathVariable = System.getenv("PATH");
+
+        if (pathVariable == null) {
+            return null;
+        }
+
+        for (String directory : pathVariable.split(File.pathSeparator)) {
+
+            Path commandPath = Paths.get(directory, command);
+
+            if (Files.exists(commandPath) && Files.isExecutable(commandPath)) {
+                return commandPath.toString();
+            }
+        }
+
+        return null;
     }
 }
